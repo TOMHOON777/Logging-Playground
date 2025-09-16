@@ -1,0 +1,22 @@
+server:
+  port: 8085
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    url: jdbc:mariadb://localhost:63306/mydb
+    username: root
+    password: 1234
+    driver-class-name: org.mariadb.jdbc.Driver
+
