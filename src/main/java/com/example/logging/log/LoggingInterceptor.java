@@ -1,20 +1,18 @@
 package com.example.logging.log;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.example.logging.repository.AccessLogRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 
 @Component
 public class LoggingInterceptor implements HandlerInterceptor {
 
-    private final AccessLogRepository accessLogRepository;
-
-    public LoggingInterceptor(AccessLogRepository accessLogRepository) {
-        this.accessLogRepository = accessLogRepository;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(LoggingInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -24,16 +22,8 @@ public class LoggingInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
         String query = request.getQueryString();
         String ip = request.getRemoteAddr();
-        String device = request.getHeader("User-Agent");
 
-        // Save to DB
-        AccessLog log = new AccessLog(uri, query, ip, device);
-        accessLogRepository.save(log);
-
-        // Also log to console
-        System.out.printf("[ACCESS] uri=%s, query=%s, ip=%s, device=%s%n",
-                          uri, query, ip, device);
-
+        logger.info("uri={}, query={}, ip={}", uri, query, ip);
         return true;
     }
 }
